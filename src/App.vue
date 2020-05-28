@@ -57,7 +57,8 @@ export default {
       this.champions = ipcRenderer.sendSync("fetchChampions");
     },
     refreshSession() {
-      this.sessionInfos = ipcRenderer.sendSync("fetchSession");
+      let newSession = ipcRenderer.sendSync("fetchSession");
+      if (newSession) this.sessionInfos = newSession;
       this.sessionInterval = setTimeout(this.refreshSession, 5000);
     },
     championInfos(id) {
@@ -118,7 +119,7 @@ export default {
           <div class="summoner-level-container">
             <div class="summoner-level">{{ summonerInfos.summonerLevel }}</div>
           </div>
-          <img :src="profileIconURL" alt="" />
+          <img :src="profileIconURL" alt />
         </div>
         <div class="infos">
           <div class="summoner-name">{{ summonerInfos.displayName }}</div>
@@ -151,7 +152,7 @@ export default {
               :src="
                 championPicture(championInfos(teamMember.championId).image.full)
               "
-              alt=""
+              alt
             />
             <div class="noChampionSelected" v-else>
               <font-awesome-icon icon="question" />
@@ -159,33 +160,25 @@ export default {
           </div>
 
           <div class="infos">
-            <div class="summoner-name">
-              {{ teamMember.displayName }}
-            </div>
+            <div class="summoner-name">{{ teamMember.displayName }}</div>
             <div class="actions">
               <div class="action" @click="blockSummoner(teamMember.summonerId)">
                 <i>
                   <font-awesome-icon icon="user-lock" />
                 </i>
-                <span>
-                  {{ teamMember.blocked ? "Unblock" : "Block" }}
-                </span>
+                <span>{{ teamMember.blocked ? "Unblock" : "Block" }}</span>
               </div>
               <div class="action" @click="likeSummoner(teamMember.summonerId)">
                 <i>
                   <font-awesome-icon icon="thumbs-up" />
                 </i>
-                <span>
-                  Like
-                </span>
+                <span>Like</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="noTeam" v-else>
-        Waiting to enter Champion Select...
-      </div>
+      <div class="noTeam" v-else>Waiting to enter Champion Select...</div>
     </Fragment>
     <Fragment v-else>
       <div class="actionButtons">
@@ -299,6 +292,14 @@ body {
   font-size: 1.5em;
   z-index: 1;
   padding-top: 0.5em;
+}
+
+.teamMember.blocked .infos .actions .action:first-of-type {
+  background-color: #3c4044;
+}
+
+.teamMember.liked .infos .actions .action:last-of-type {
+  background-color: #3c4044;
 }
 
 .teamMember.blocked .infos .summoner-name,

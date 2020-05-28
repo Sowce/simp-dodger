@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "e:build": "vue-cli-service electron:build",
+    "e:dev": "yarn e:serve",
     "e:serve": "vue-cli-service electron:serve",
     "e:icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "postinstall": "electron-builder install-app-deps",
